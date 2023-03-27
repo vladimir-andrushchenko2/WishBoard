@@ -1,0 +1,21 @@
+.header__action {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  text-decoration: none;
+  border: 0;
+  padding: 0;
+  background-color: inherit;
+  color: white;
+}
+
+.header__action:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+@media screen and (min-width: 624px) {
+  .header__action {
+    font-size: 18px;
+  }
+}

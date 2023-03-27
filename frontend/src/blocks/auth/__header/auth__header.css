@@ -1,0 +1,13 @@
+.auth__header {
+  margin: 60px auto 50px;
+  font-weight: 900;
+  font-size: 20px;
+  line-height: 29px;
+  text-align: center;
+}
+
+@media screen and (min-width: 624px) {
+  .auth__header {
+    font-size: 24px;
+  }
+}

@@ -1,0 +1,46 @@
+.header__menu {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 40px;
+  margin-bottom: 27px;
+  max-height: 300px;
+  opacity: 1;
+  visibility: visible;
+  transition: 0.3s ease-in-out;
+}
+
+.header__menu_hidden {
+  visibility: hidden;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  opacity: 0;
+}
+
+.header__menu::after {
+  content: '';
+  border-bottom: 1px solid #545454;
+  width: 100vw;
+  position: absolute;
+  bottom: 0;
+}
+
+@media screen and (min-width: 624px) {
+  .header__menu {
+    visibility: visible;
+    opacity: 1;
+    max-height: max-content;
+    flex-direction: row;
+    overflow: visible;
+    margin: 0;
+    padding: 0;
+  }
+
+  .header__menu::after {
+    display: none;
+  }
+}

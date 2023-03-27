@@ -1,0 +1,5 @@
+.auth__error {
+  color: red;
+  max-width: max-content;
+  margin: 20px auto;
+}

@@ -1,0 +1,23 @@
+.gallery__items {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  row-gap: var(--gallery-gap-size);
+  column-gap: var(--gallery-gap-size);
+  grid-auto-rows: 361px;
+  margin: auto;
+}
+
+@media screen and (min-width: 624px) {
+  .gallery__items {
+    grid-template-columns: repeat(2, var(--card-width));
+  }
+}
+
+@media screen and (min-width: 920px) {
+  .gallery__items {
+    grid-template-columns: repeat(3, var(--card-width));
+    max-width: 920px;
+    column-gap: calc(var(--gallery-gap-size) - 3px);
+  }
+}

@@ -1,0 +1,66 @@
+const Card = require('../models/card');
+const { NotFound, UnauthorizedError } = require('../customErrors');
+const { CARD_NOT_FOUND_MSG } = require('../constants');
+const makeCatchForController = require('../utils/makeCatchForControllers');
+
+function getCards(req, res, next) {
+  Card.find({})
+    .populate(['owner', 'likes'])
+    .then((cards) => res.send({ data: cards }))
+    .catch(makeCatchForController(next));
+}
+
+function postCard(req, res, next) {
+  const { name, link } = req.body;
+  const { _id: owner } = req.user;
+
+  Card.create({ name, link, owner })
+    .then((card) => res.status(201).send({ data: card }))
+    .catch(makeCatchForController(next));
+}
+
+function deleteCard(req, res, next) {
+  Card.findById(req.params.cardId)
+    .populate(['owner', 'likes'])
+    .then(async (card) => {
+      if (!card) {
+        throw new NotFound(CARD_NOT_FOUND_MSG);
+      }
+
+      if (card.owner.id !== req.user._id) {
+        throw new UnauthorizedError('Нельзя удалять чужие карточки');
+      }
+
+      await Card.deleteOne({ _id: card._id });
+
+      return res.send({ data: card, msg: 'fuck' });
+    })
+    .catch(makeCatchForController(next));
+}
+
+function updateCardDecorator(makeUpdateObjWithReqCallback) {
+  return (req, res, next) => {
+    Card.findByIdAndUpdate(
+      req.params.cardId,
+      makeUpdateObjWithReqCallback(req),
+      { new: true },
+    )
+      .populate(['owner', 'likes'])
+      .then((card) => {
+        if (!card) {
+          throw new NotFound(CARD_NOT_FOUND_MSG);
+        }
+
+        res.send({ data: card });
+      })
+      .catch(makeCatchForController(next));
+  };
+}
+
+const putLike = updateCardDecorator((req) => ({ $addToSet: { likes: req.user._id } }));
+
+const deleteLike = updateCardDecorator((req) => ({ $pull: { likes: req.user._id } }));
+
+module.exports = {
+  getCards, postCard, deleteCard, putLike, deleteLike,
+};

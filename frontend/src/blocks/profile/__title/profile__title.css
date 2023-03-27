@@ -1,0 +1,14 @@
+.profile__title {
+  margin: 26px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-area: title;
+  justify-self: start;
+}
+
+@media screen and (min-width: 920px) {
+  .profile__title {
+    margin-left: 30px;
+  }
+}

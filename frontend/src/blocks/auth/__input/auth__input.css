@@ -1,0 +1,17 @@
+.auth__input {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #ccc;
+  background-color: inherit;
+  padding-bottom: 13px;
+  width: 82vw;
+  max-width: 358px;
+  border: 0;
+  border-bottom: 2px solid rgb(228, 226, 226);
+}
+
+.auth__input:focus-visible {
+  outline: 0;
+  border-bottom: 2px solid rgb(69, 69, 69);
+}

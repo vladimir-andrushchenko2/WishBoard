@@ -1,0 +1,8 @@
+.auth__input-error {
+  width: 82vw;
+  max-width: 362px;
+  font-size: 12px;
+  color: red;
+  min-height: 28px;
+  margin: 4px 0 4px;
+}
