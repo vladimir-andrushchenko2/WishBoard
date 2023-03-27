@@ -7,7 +7,8 @@ class Api {
   _makeRequest(path, method = 'GET', body) {
     const config = {
       headers: this._headers,
-      method
+      method,
+      credentials: 'include'
     };
 
     if (body) {
@@ -55,12 +56,19 @@ class Api {
   patchUserAvatar(avatarUrl) {
     return this._makeRequest(`/users/me/avatar`, 'PATCH', { avatar: avatarUrl });
   }
+
+  signUp(email, password) {
+    return this._makeRequest('/signup', 'POST', { email, password });
+  }
+
+  signIn(email, password) {
+    return this._makeRequest('/signin', 'POST', { email, password });
+  }
 }
 
 export const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-52',
+  baseUrl: 'http://localhost:8080',
   headers: {
-    authorization: '701d7c23-a5ed-4bcd-aa15-7b4714e01efc',
     'Content-Type': 'application/json'
   }
 });

@@ -14,7 +14,6 @@ import Register from './Register';
 import Login from './Login';
 
 import { api } from '../utils/api';
-import { authApi } from '../utils/apiAuth';
 
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
@@ -54,7 +53,7 @@ function App() {
   }
 
   function handleRegister(email, password) {
-    return authApi.signUp(email, password)
+    return api.signUp(email, password)
       .then(({ data }) => {
         setTooltipShowsSuccess(true);
         setIsTooltipOpen(true);
@@ -77,17 +76,11 @@ function App() {
   }
 
   function handleLogin(email, password) {
-    return authApi.fetchToken(email, password)
+    return api.fetchToken(email, password)
       .then(({ token }) => {
-        localStorage.setItem('jwt', token);
-
-        authApi.addTokenToHeaders(token);
-
         setIsLoggedIn(true);
 
         history.push('/')
-
-        return token;
       })
       .catch(status => {
         setTooltipShowsSuccess(false);
@@ -184,12 +177,8 @@ function App() {
   }, [isLoggedIn])
 
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
-
-    if (token) {
-      authApi.addTokenToHeaders(token);
-
-      Promise.all([authApi.fetchCurrentUser(), api.getUserInfo()])
+    if (isLoggedIn) {
+      Promise.all([api.getUserInfo(), api.getUserInfo()])
         .then(([{ data }, userInfo]) => {
           setCurrentUser({ protectedData: data, ...userInfo });
           setIsLoggedIn(true);
