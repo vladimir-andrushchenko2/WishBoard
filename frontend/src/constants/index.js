@@ -1,1 +1,1 @@
-export const url = 'http://bigchungus.nomoredomains.work'
+export const url = 'http://api/bigchungus.nomoredomains.work'
