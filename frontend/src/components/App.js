@@ -77,7 +77,7 @@ function App() {
 
   function handleLogin(email, password) {
     return api.fetchToken(email, password)
-      .then(({ token }) => {
+      .then(() => {
         setIsLoggedIn(true);
 
         history.push('/')
