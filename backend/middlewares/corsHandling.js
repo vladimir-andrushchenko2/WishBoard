@@ -1,11 +1,17 @@
-// Массив доменов, с которых разрешены кросс-доменные запросы
+const { InvalidRequest } = require('../customErrors/InvalidRequest');
+
 const allowedCors = [
   'https://bigchungus.nomoredomains.work',
   'http://bigchungus.nomoredomains.work',
+  'http://localhost:3000',
 ];
 
 module.exports = (req, res, next) => {
   const { origin } = req.headers;
+
+  if (!origin) {
+    return next(new InvalidRequest('no origin header'));
+  }
 
   if (allowedCors.some((allowedOrigin) => origin.startsWith(allowedOrigin))) {
     res.header('Access-Control-Allow-Origin', origin);

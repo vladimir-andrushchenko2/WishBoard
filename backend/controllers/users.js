@@ -86,7 +86,7 @@ function login(req, res, next) {
         // token - наш JWT токен, который мы отправляем
         maxAge: 3600000,
         httpOnly: true,
-      }).end();
+      }).status(200).send({ msg: 'ok' });
     })
     .catch(makeCatchForController(next));
 }
