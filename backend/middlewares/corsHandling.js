@@ -2,14 +2,14 @@
 const allowedCors = [
   'https://bigchungus.nomoredomains.work',
   'http://bigchungus.nomoredomains.work',
-  'localhost:3000',
 ];
 
 module.exports = (req, res, next) => {
   const { origin } = req.headers;
 
-  if (allowedCors.includes(origin)) {
+  if (allowedCors.some((allowedOrigin) => origin.startsWith(allowedOrigin))) {
     res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', true);
   }
 
   const { method } = req; // Сохраняем тип запроса (HTTP-метод) в соответствующую переменную
