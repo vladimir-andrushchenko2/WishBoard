@@ -1,8 +1,8 @@
 const { InvalidRequest } = require('../customErrors/InvalidRequest');
 
 const allowedCors = [
-  'https://api.bigchungus.nomoredomains.work',
-  'http://api.bigchungus.nomoredomains.work',
+  'https://bigchungus.nomoredomains.work',
+  'http://bigchungus.nomoredomains.work',
   'http://localhost:3000',
 ];
 
