@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import Auth from './Auth';
-import InfoTooltip from './InfoTooltip';
+import Auth from '../elements/Auth';
+import InfoTooltip from '../popups/InfoTooltip';
 
 function Register({ onRegister, onCloseRegisterTooltip, isTooltipOpen, tooltipShowsSuccess }) {
   return (

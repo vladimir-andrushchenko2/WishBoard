@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Switch, Redirect, useHistory } from 'react-router-dom'
 
-import Header from './Header';
-import Main from './Main';
-import PopupWithForm from './PopupWithForm';
-import ImagePopup from './ImagePopup';
-import Footer from './Footer';
-import EditProfilePopup from './EditProfilePopup';
-import EditAvatarPopup from './EditAvatarPopup';
-import AddPlacePopup from './AddPlacePopup';
-import ProtectedRoute from './ProtectedRoute';
-import Register from './Register';
-import Login from './Login';
+import Header from './elements/Header';
+import Main from './pages/Main';
+import PopupWithForm from './popups/PopupWithForm';
+import ImagePopup from './popups/ImagePopup';
+import Footer from './elements/Footer';
+import EditProfilePopup from './popups/EditProfilePopup';
+import EditAvatarPopup from './popups/EditAvatarPopup';
+import AddPlacePopup from './popups/AddPlacePopup';
+import ProtectedRoute from './utils/ProtectedRoute';
+import Register from './pages/Register';
+import Login from './pages/Login';
 
 import { api } from '../utils/api';
 
@@ -48,7 +48,10 @@ function App() {
   }
 
   function handleSignOut() {
-    localStorage.removeItem('jwt');
+    // localStorage.removeItem('jwt');
+    api.signOut().then((res) => {
+      console.log(res)
+    })
     setIsLoggedIn(false);
   }
 
@@ -76,7 +79,7 @@ function App() {
   }
 
   function handleLogin(email, password) {
-    return api.fetchToken(email, password)
+    return api.signIn(email, password)
       .then(() => {
         setIsLoggedIn(true);
 
@@ -112,7 +115,7 @@ function App() {
 
   function handleCardDelete(cardToDelete) {
     api.deleteCard(cardToDelete._id)
-      .then(msg => {
+      .then(() => {
         setCards(cards.filter(card => card._id !== cardToDelete._id))
       })
       .catch(err => console.error(err));
@@ -163,6 +166,15 @@ function App() {
     setSelectedCard(null);
   }
 
+  // I use this to check if user has a valid jwt cookie
+  // not to force user to login again upon reload
+  useEffect(() => {
+    api.getUserInfo()
+      .then(() => {
+        setIsLoggedIn(true)
+      })
+  }, [])
+
   useEffect(() => {
     if (isLoggedIn) {
       api.getInitialCards()
@@ -178,9 +190,9 @@ function App() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      Promise.all([api.getUserInfo(), api.getUserInfo()])
-        .then(([{ data }, userInfo]) => {
-          setCurrentUser({ protectedData: data, ...userInfo });
+      api.getUserInfo()
+        .then((userInfo) => {
+          setCurrentUser({ ...userInfo });
           setIsLoggedIn(true);
         })
         .catch(err => console.error(err))

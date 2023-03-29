@@ -1,5 +1,5 @@
-import Auth from './Auth';
-import InfoTooltip from './InfoTooltip';
+import Auth from '../elements/Auth';
+import InfoTooltip from '../popups/InfoTooltip';
 
 function Login({ onLogin, onCloseLoginTooltip, isTooltipOpen, tooltipShowsSuccess }) {
   return (

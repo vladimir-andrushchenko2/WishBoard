@@ -28,19 +28,19 @@ class Api {
   }
 
   getInitialCards() {
-    return this._makeRequest('/cards');
+    return this._makeRequest('/cards').then(({ data }) => data);
   }
 
   getUserInfo() {
-    return this._makeRequest('/users/me');
+    return this._makeRequest('/users/me').then(({ data }) => data);
   }
 
   patchUserInfo(name, about) {
-    return this._makeRequest('/users/me', 'PATCH', { name, about });
+    return this._makeRequest('/users/me', 'PATCH', { name, about }).then(({ data }) => data);
   }
 
   postCard(name, link) {
-    return this._makeRequest('/cards', 'POST', { name, link });
+    return this._makeRequest('/cards', 'POST', { name, link }).then(({ data }) => data);
   }
 
   deleteCard(cardId) {
@@ -48,15 +48,15 @@ class Api {
   }
 
   putCardLike(cardId) {
-    return this._makeRequest(`/cards/${cardId}/likes`, 'PUT');
+    return this._makeRequest(`/cards/${cardId}/likes`, 'PUT').then(({ data }) => data);
   }
 
   deleteCardLike(cardId) {
-    return this._makeRequest(`/cards/${cardId}/likes`, 'DELETE')
+    return this._makeRequest(`/cards/${cardId}/likes`, 'DELETE').then(({ data }) => data);
   }
 
   patchUserAvatar(avatarUrl) {
-    return this._makeRequest(`/users/me/avatar`, 'PATCH', { avatar: avatarUrl });
+    return this._makeRequest(`/users/me/avatar`, 'PATCH', { avatar: avatarUrl }).then(({ data }) => data);
   }
 
   signUp(email, password) {
@@ -65,6 +65,10 @@ class Api {
 
   signIn(email, password) {
     return this._makeRequest('/signin', 'POST', { email, password });
+  }
+
+  signOut() {
+    return this._makeRequest('/users/logout', 'DELETE')
   }
 }
 

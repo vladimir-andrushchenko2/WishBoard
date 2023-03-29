@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useContext } from 'react';
 import { useLocation, Link, Switch, Route } from 'react-router-dom';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 function Header({ onSignOut }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

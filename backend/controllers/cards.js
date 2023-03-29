@@ -10,13 +10,19 @@ function getCards(req, res, next) {
     .catch(makeCatchForController(next));
 }
 
-function postCard(req, res, next) {
+async function postCard(req, res, next) {
   const { name, link } = req.body;
   const { _id: owner } = req.user;
 
-  Card.create({ name, link, owner })
-    .then((card) => res.status(201).send({ data: card }))
-    .catch(makeCatchForController(next));
+  let card;
+  try {
+    card = await Card.create({ name, link, owner });
+    card = await card.populate('owner');
+  } catch (err) {
+    makeCatchForController(next)(err);
+  }
+
+  return res.status(201).send({ data: card });
 }
 
 function deleteCard(req, res, next) {
@@ -33,7 +39,7 @@ function deleteCard(req, res, next) {
 
       await Card.deleteOne({ _id: card._id });
 
-      return res.send({ data: card, msg: 'fuck' });
+      return res.send({ data: card });
     })
     .catch(makeCatchForController(next));
 }

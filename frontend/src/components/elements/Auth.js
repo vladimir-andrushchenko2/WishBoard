@@ -36,9 +36,9 @@ function Auth({ headerText, buttonText, onSubmitAuth }) {
       <div className="auth__container">
         <h1 className='auth__header'>{headerText}</h1>
         <form className='auth__form' onSubmit={handleSubmit} noValidate>
-          <input className='auth__input' type="email" name="email" value={email} placeholder='Email' onChange={handleEmailChange} />
+          <input className='auth__input' type="email" name="email" value={email} placeholder='Email' onChange={handleEmailChange} autoComplete="username" />
           <p className='auth__input-error' ref={emailErrorRef}></p>
-          <input className='auth__input' minLength={8} type="password" name="password" value={password} placeholder='Пароль' onChange={handlePasswordChange} />
+          <input className='auth__input' minLength={8} type="password" name="password" value={password} placeholder='Пароль' onChange={handlePasswordChange} autoComplete="current-password" />
           <p className='auth__input-error' ref={passwordErrorRef}></p>
           <input className='auth__submit' type="submit" value={buttonText} disabled={!isPasswordValid || !isEmailValid || someInputsEmpty} />
         </form>

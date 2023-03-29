@@ -46,7 +46,7 @@ function postUser(req, res, next) {
     .catch(makeCatchForController(next));
 }
 
-function updateUserDecorator(getNewDataObjFromBodyCallback) {
+function updateUserWithCallback(getNewDataObjFromBodyCallback) {
   return (req, res, next) => {
     const updateOptions = {
       new: true,
@@ -61,15 +61,15 @@ function updateUserDecorator(getNewDataObjFromBodyCallback) {
           throw new NotFound(USER_NOT_FOUND_MSG);
         }
 
-        res.send({ user });
+        res.send({ data: user });
       })
       .catch(makeCatchForController(next));
   };
 }
 
-const patchUser = updateUserDecorator(({ name, about }) => ({ name, about }));
+const patchUser = updateUserWithCallback(({ name, about }) => ({ name, about }));
 
-const patchUserAvatar = updateUserDecorator(({ avatar }) => ({ avatar }));
+const patchUserAvatar = updateUserWithCallback(({ avatar }) => ({ avatar }));
 
 function login(req, res, next) {
   const { email, password } = req.body;
@@ -86,11 +86,15 @@ function login(req, res, next) {
         // token - наш JWT токен, который мы отправляем
         maxAge: 3600000,
         httpOnly: true,
-      }).status(200).send({ msg: 'ok' });
+      }).status(200).send({ message: 'login successfull, token is stored in cookies' });
     })
     .catch(makeCatchForController(next));
 }
 
+function logout(req, res) {
+  return res.clearCookie('jwt').status(200).send({ message: 'the jwt cookie is the killedest guy in the room' });
+}
+
 module.exports = {
-  getUsers, getUser, postUser, patchUser, patchUserAvatar, login, getMe,
+  getUsers, getUser, postUser, patchUser, patchUserAvatar, login, getMe, logout,
 };
