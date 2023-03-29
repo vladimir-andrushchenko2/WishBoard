@@ -1,7 +1,7 @@
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'https://api.bigchungus.nomoredomains.work',
-  'http://api.bigchungus.nomoredomains.work',
+  'https://bigchungus.nomoredomains.work',
+  'http://bigchungus.nomoredomains.work',
   'localhost:3000',
 ];
 
