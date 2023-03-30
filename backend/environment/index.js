@@ -6,4 +6,4 @@ const JWT_SECRET = process.env.NODE_ENV === 'production'
 
 console.log(process.env.NODE_ENV ?? 'environment is not specified, running dev');
 
-module.exports = { JWT_SECRET, ...constants };
+module.exports = { JWT_SECRET };
