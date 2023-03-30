@@ -16,6 +16,13 @@ app.use(requestLogger);
 
 app.use('/', require('./routes'));
 
+// this is for testing
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.use(errorLogger);
 
 // this is for Joi and celebrate
