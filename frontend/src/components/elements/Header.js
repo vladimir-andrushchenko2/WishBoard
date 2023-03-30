@@ -31,7 +31,7 @@ function Header({ onSignOut }) {
       <Switch>
         <Route exact path='/'>
           <div className={`header__menu ${isMenuOpen ? '' : 'header__menu_hidden'}`}>
-            <span className='header__user-email'>{currentUser?.protectedData?.email}</span>
+            <span className='header__user-email'>{currentUser?.email}</span>
             <button className='header__sign-out' onClick={onSignOut}>Выйти</button>
           </div>
         </Route>
