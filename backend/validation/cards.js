@@ -7,17 +7,10 @@ const validatePostCard = celebrate({
   }),
 });
 
-const validateDeleteCard = celebrate({
+const validateCardIdInParams = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().hex().length(24).required(),
   }),
 });
 
-const validateLikeChange = celebrate({
-  // валидируем параметры
-  params: Joi.object().keys({
-    cardId: Joi.string().hex().length(24).required(),
-  }),
-});
-
-module.exports = { validatePostCard, validateDeleteCard, validateLikeChange };
+module.exports = { validatePostCard, validateCardIdInParams };
