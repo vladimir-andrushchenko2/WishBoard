@@ -1,5 +1,4 @@
 require('dotenv').config();
-const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 
@@ -13,8 +12,6 @@ const app = express();
 app.use(corsHandling);
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(requestLogger);
 
 app.use('/', require('./routes'));
