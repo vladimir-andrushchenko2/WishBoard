@@ -18,16 +18,16 @@ const validatePostUser = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
-    name: Joi.string().min(2).max(32),
+    name: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(/^(http|https):\/\/[^ "]+$/),
-    about: Joi.string().max(256),
+    about: Joi.string().min(2).max(30),
   }),
 });
 
 const validatePatchUser = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(32),
-    about: Joi.string().required().max(256),
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().max(30),
   }),
 });
 
