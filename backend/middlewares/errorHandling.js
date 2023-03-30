@@ -1,4 +1,4 @@
-module.exports = (err, req, res, next) => {
+module.exports = (err, req, res, _next) => {
   // если у ошибки нет статуса, выставляем 500
   const { status = 500, message } = err;
 
