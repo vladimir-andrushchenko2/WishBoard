@@ -13,4 +13,11 @@ const validateDeleteCard = celebrate({
   }),
 });
 
-module.exports = { validatePostCard, validateDeleteCard };
+const validateLikeChange = celebrate({
+  // валидируем параметры
+  params: Joi.object().keys({
+    cardId: Joi.string().hex().length(24).required(),
+  }),
+});
+
+module.exports = { validatePostCard, validateDeleteCard, validateLikeChange };
