@@ -1,5 +1,5 @@
 const Card = require('../models/card');
-const { NotFound, UnauthorizedError } = require('../customErrors');
+const { NotFound, ForbiddenError } = require('../customErrors');
 const { CARD_NOT_FOUND_MSG } = require('../constants');
 const makeCatchForController = require('../utils/makeCatchForControllers');
 
@@ -35,7 +35,7 @@ function deleteCard(req, res, next) {
       }
 
       if (card.owner.id !== req.user._id) {
-        throw new UnauthorizedError('Нельзя удалять чужие карточки');
+        throw new ForbiddenError('Нельзя удалять чужие карточки');
       }
 
       await Card.deleteOne({ _id: card._id });
