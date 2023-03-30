@@ -5,6 +5,7 @@ const makeCatchForController = require('../utils/makeCatchForControllers');
 
 function getCards(req, res, next) {
   Card.find({})
+    .sort({ createdAt: -1 })
     .populate(['owner', 'likes'])
     .then((cards) => res.send({ data: cards }))
     .catch(makeCatchForController(next));
