@@ -2,7 +2,7 @@ const { InvalidRequest } = require('../customErrors/InvalidRequest');
 
 const allowedCors = [
   'https://bigchungus.nomoredomains.work',
-  'http://bigchungus.nomoredomains.work',
+  'https://mesto.vova.today',
   'http://localhost:3000',
 ];
 
