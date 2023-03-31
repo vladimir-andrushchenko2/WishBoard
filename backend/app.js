@@ -9,19 +9,19 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
-app.use(corsHandling);
-app.use(express.json());
-app.use(cookieParser());
-app.use(requestLogger);
-
-app.use('/', require('./routes'));
-
 // this is for testing
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
+
+app.use(corsHandling);
+app.use(express.json());
+app.use(cookieParser());
+app.use(requestLogger);
+
+app.use('/', require('./routes'));
 
 app.use(errorLogger);
 
