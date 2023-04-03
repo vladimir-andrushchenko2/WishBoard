@@ -4,6 +4,7 @@ const allowedCors = [
   'https://bigchungus.nomoredomains.work',
   'https://mesto.vova.today',
   'http://localhost:3000',
+  'http://api.vova.today',
 ];
 
 module.exports = (req, res, next) => {
