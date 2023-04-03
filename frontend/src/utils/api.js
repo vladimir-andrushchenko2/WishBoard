@@ -71,7 +71,7 @@ class Api {
 }
 
 export const api = new Api({
-  baseUrl: process.env.REACT_APP_API_URL,
+  baseUrl: process.env.REACT_APP_API_URL ?? 'http://localhost:8080',
   headers: {
     'Content-Type': 'application/json'
   }
