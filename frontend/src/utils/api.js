@@ -1,5 +1,3 @@
-import { url } from '../constants'
-
 class Api {
   constructor({ baseUrl, headers }) {
     this._baseUrl = baseUrl;
@@ -73,7 +71,7 @@ class Api {
 }
 
 export const api = new Api({
-  baseUrl: url,
+  baseUrl: process.env.REACT_APP_API_URL,
   headers: {
     'Content-Type': 'application/json'
   }
