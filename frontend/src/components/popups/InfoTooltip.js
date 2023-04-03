@@ -1,5 +1,5 @@
-import successSign from '../../ui-elements/success.svg';
-import failureSign from '../../ui-elements/fail.svg';
+import successSign from '../../assets/ui-elements/success.svg';
+import failureSign from '../../assets/ui-elements/fail.svg';
 
 function InfoTooltip({ isOpen, onClose, isSuccess }) {
   const backgroundImage = { backgroundImage: `url(${isSuccess ? successSign : failureSign})` };
