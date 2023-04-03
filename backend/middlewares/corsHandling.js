@@ -1,11 +1,5 @@
 const { InvalidRequest } = require('../customErrors/InvalidRequest');
-
-const allowedCors = [
-  'https://bigchungus.nomoredomains.work',
-  'https://mesto.vova.today',
-  'http://localhost:3000',
-  'http://api.vova.today',
-];
+const { CLIENT_NAME } = require('../environment');
 
 module.exports = (req, res, next) => {
   const { origin } = req.headers;
@@ -14,7 +8,7 @@ module.exports = (req, res, next) => {
     return next(new InvalidRequest('no origin header'));
   }
 
-  if (allowedCors.some((allowedOrigin) => origin.startsWith(allowedOrigin))) {
+  if (origin.startsWith(CLIENT_NAME)) {
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Credentials', true);
   }
