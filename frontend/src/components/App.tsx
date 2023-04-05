@@ -1,80 +1,80 @@
-import React, { useEffect, useState } from 'react';
-import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { Route, Switch, Redirect, useHistory } from 'react-router-dom'
 
-import Header from './elements/Header';
-import Main from './pages/Main';
-import ImagePopup from './popups/ImagePopup';
-import Footer from './elements/Footer';
-import EditProfilePopup from './popups/EditProfilePopup';
-import EditAvatarPopup from './popups/EditAvatarPopup';
-import AddPlacePopup from './popups/AddPlacePopup';
-import ProtectedRoute from './utils/ProtectedRoute';
-import Register from './pages/Register';
-import Login from './pages/Login';
+import Header from './elements/Header'
+import Main from './pages/Main'
+import ImagePopup from './popups/ImagePopup'
+import Footer from './elements/Footer'
+import EditProfilePopup from './popups/EditProfilePopup'
+import EditAvatarPopup from './popups/EditAvatarPopup'
+import AddPlacePopup from './popups/AddPlacePopup'
+import ProtectedRoute from './utils/ProtectedRoute'
+import Register from './pages/Register'
+import Login from './pages/Login'
 
-import { api } from '../utils/api';
+import { api } from '../utils/api'
 
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { CurrentUserContext } from '../contexts/CurrentUserContext'
 
 function App() {
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
 
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false)
 
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false)
 
-  const [selectedCard, setSelectedCard] = useState<Card>();
+  const [selectedCard, setSelectedCard] = useState<Card>()
 
-  const [currentUser, setCurrentUser] = useState<User>();
+  const [currentUser, setCurrentUser] = useState<User>()
 
-  const [cards, setCards] = useState<Card[]>([]);
+  const [cards, setCards] = useState<Card[]>([])
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false)
 
-  const [tooltipShowsSuccess, setTooltipShowsSuccess] = useState(false);
+  const [tooltipShowsSuccess, setTooltipShowsSuccess] = useState(false)
 
-  const history = useHistory();
+  const history = useHistory()
 
   function handleAddPlaceSubmit(name: string, link: string) {
     api
       .postCard(name, link)
       .then((newCard) => {
-        setCards([newCard, ...cards]);
-        closeAllPopups();
+        setCards([newCard, ...cards])
+        closeAllPopups()
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
   }
 
   function handleSignOut() {
     // localStorage.removeItem('jwt');
     api.signOut().then((res) => {
-      console.log(res);
-    });
-    setIsLoggedIn(false);
+      console.log(res)
+    })
+    setIsLoggedIn(false)
   }
 
   function handleRegister(email: string, password: string) {
     return api
       .signUp(email, password)
       .then(({ data }) => {
-        setTooltipShowsSuccess(true);
-        setIsTooltipOpen(true);
+        setTooltipShowsSuccess(true)
+        setIsTooltipOpen(true)
       })
       .catch((err) => {
-        console.error(`Error status code ${err}`);
-        setTooltipShowsSuccess(false);
-        setIsTooltipOpen(true);
-      });
+        console.error(`Error status code ${err}`)
+        setTooltipShowsSuccess(false)
+        setIsTooltipOpen(true)
+      })
   }
 
   function handleCloseRegisterTooltip() {
     if (tooltipShowsSuccess) {
-      setIsTooltipOpen(false);
-      history.push('/sign-in');
+      setIsTooltipOpen(false)
+      history.push('/sign-in')
     } else {
-      setIsTooltipOpen(false);
+      setIsTooltipOpen(false)
     }
   }
 
@@ -82,47 +82,43 @@ function App() {
     return api
       .signIn(email, password)
       .then(() => {
-        setIsLoggedIn(true);
+        setIsLoggedIn(true)
 
-        history.push('/');
+        history.push('/')
       })
       .catch((status) => {
-        setTooltipShowsSuccess(false);
-        setIsTooltipOpen(true);
-      });
+        setTooltipShowsSuccess(false)
+        setIsTooltipOpen(true)
+      })
   }
 
   function handleCloseLoginTooltip() {
-    setIsTooltipOpen(false);
+    setIsTooltipOpen(false)
   }
 
   function handleCardLike(card: Card) {
     if (!currentUser) {
-      throw new Error(
-        'Impossible to like a card without current user selected',
-      );
+      throw new Error('Impossible to like a card without current user selected')
     }
 
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i._id === currentUser._id)
 
     function updateCards(updatedCard: Card) {
       setCards(
-        cards.map((card) =>
-          card._id === updatedCard._id ? updatedCard : card,
-        ),
-      );
+        cards.map((card) => (card._id === updatedCard._id ? updatedCard : card))
+      )
     }
 
     if (!isLiked) {
       api
         .putCardLike(card._id)
         .then(updateCards)
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
     } else {
       api
         .deleteCardLike(card._id)
         .then(updateCards)
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
     }
   }
 
@@ -130,108 +126,108 @@ function App() {
     api
       .deleteCard(cardToDelete._id)
       .then(() => {
-        setCards(cards.filter((card) => card._id !== cardToDelete._id));
+        setCards(cards.filter((card) => card._id !== cardToDelete._id))
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
   }
 
   // onClick={() => handleCardClick(card)}
   function handleCardClick(card: Card) {
-    setSelectedCard(card);
+    setSelectedCard(card)
   }
 
   function handleEditProfileClick() {
-    setIsEditProfilePopupOpen(true);
+    setIsEditProfilePopupOpen(true)
   }
 
   function handleEditAvatarClick() {
-    setIsEditAvatarPopupOpen(true);
+    setIsEditAvatarPopupOpen(true)
   }
 
   function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(true);
+    setIsAddPlacePopupOpen(true)
   }
 
   function handleUpdateUser({ name, about }: { name: string; about: string }) {
     api
       .patchUserInfo(name, about)
       .then((updatedUser) => {
-        setCurrentUser(updatedUser);
-        closeAllPopups();
+        setCurrentUser(updatedUser)
+        closeAllPopups()
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
   }
 
   function handleUpdateAvatar({ avatar }: { avatar: string }) {
     api
       .patchUserAvatar(avatar)
       .then((updatedUser) => {
-        setCurrentUser(updatedUser);
-        closeAllPopups();
+        setCurrentUser(updatedUser)
+        closeAllPopups()
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
   }
 
   function closeAllPopups() {
-    setIsAddPlacePopupOpen(false);
+    setIsAddPlacePopupOpen(false)
 
-    setIsEditAvatarPopupOpen(false);
+    setIsEditAvatarPopupOpen(false)
 
-    setIsEditProfilePopupOpen(false);
+    setIsEditProfilePopupOpen(false)
 
-    setSelectedCard(undefined);
+    setSelectedCard(undefined)
   }
 
   // I use this to check if user has a valid jwt cookie
   // not to force user to login again upon reload
   useEffect(() => {
     api.getUserInfo().then(() => {
-      setIsLoggedIn(true);
-    });
-  }, []);
+      setIsLoggedIn(true)
+    })
+  }, [])
 
   useEffect(() => {
     if (isLoggedIn) {
       api
         .getInitialCards()
         .then((initialCards) => {
-          setCards(initialCards);
+          setCards(initialCards)
         })
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
     } else {
-      setCards([]);
+      setCards([])
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn])
 
   useEffect(() => {
     if (isLoggedIn) {
       api
         .getUserInfo()
         .then((userInfo) => {
-          setCurrentUser({ ...userInfo });
-          setIsLoggedIn(true);
+          setCurrentUser({ ...userInfo })
+          setIsLoggedIn(true)
         })
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
     } else {
       // удаляю данные о пользователе если пользователь вышел
       // для этого в зависимостях isLoggedIn
-      setCurrentUser(undefined);
+      setCurrentUser(undefined)
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn])
 
   useEffect(() => {
     function closePopUpOnEsc({ key }: { key: string }) {
       if (key === 'Escape') {
-        closeAllPopups();
+        closeAllPopups()
       }
     }
 
-    document.addEventListener('keydown', closePopUpOnEsc);
+    document.addEventListener('keydown', closePopUpOnEsc)
 
     return () => {
-      document.removeEventListener('keydown', closePopUpOnEsc);
-    };
-  }, []);
+      document.removeEventListener('keydown', closePopUpOnEsc)
+    }
+  }, [])
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -304,7 +300,7 @@ function App() {
         {isLoggedIn && <Footer />}
       </div>
     </CurrentUserContext.Provider>
-  );
+  )
 }
 
-export default App;
+export default App
