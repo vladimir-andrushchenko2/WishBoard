@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Switch, Redirect, useHistory } from 'react-router-dom'
+import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 
 import Header from './elements/Header';
 import Main from './pages/Main';
@@ -39,56 +39,58 @@ function App() {
   const history = useHistory();
 
   function handleAddPlaceSubmit(name, link) {
-    api.postCard(name, link)
-      .then(newCard => {
+    api
+      .postCard(name, link)
+      .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
   }
 
   function handleSignOut() {
     // localStorage.removeItem('jwt');
     api.signOut().then((res) => {
-      console.log(res)
-    })
+      console.log(res);
+    });
     setIsLoggedIn(false);
   }
 
   function handleRegister(email, password) {
-    return api.signUp(email, password)
+    return api
+      .signUp(email, password)
       .then(({ data }) => {
         setTooltipShowsSuccess(true);
         setIsTooltipOpen(true);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(`Error status code ${err}`);
         setTooltipShowsSuccess(false);
         setIsTooltipOpen(true);
-      })
+      });
   }
 
   function handleCloseRegisterTooltip() {
     if (tooltipShowsSuccess) {
       setIsTooltipOpen(false);
       history.push('/sign-in');
-
     } else {
       setIsTooltipOpen(false);
     }
   }
 
   function handleLogin(email, password) {
-    return api.signIn(email, password)
+    return api
+      .signIn(email, password)
       .then(() => {
         setIsLoggedIn(true);
 
-        history.push('/')
+        history.push('/');
       })
-      .catch(status => {
+      .catch((status) => {
         setTooltipShowsSuccess(false);
         setIsTooltipOpen(true);
-      })
+      });
   }
 
   function handleCloseLoginTooltip() {
@@ -96,29 +98,36 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     function updateCards(updatedCard) {
-      setCards(cards.map(card => card._id === updatedCard._id ? updatedCard : card));
+      setCards(
+        cards.map((card) =>
+          card._id === updatedCard._id ? updatedCard : card,
+        ),
+      );
     }
 
     if (!isLiked) {
-      api.putCardLike(card._id)
+      api
+        .putCardLike(card._id)
         .then(updateCards)
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
     } else {
-      api.deleteCardLike(card._id)
+      api
+        .deleteCardLike(card._id)
         .then(updateCards)
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
     }
   }
 
   function handleCardDelete(cardToDelete) {
-    api.deleteCard(cardToDelete._id)
+    api
+      .deleteCard(cardToDelete._id)
       .then(() => {
-        setCards(cards.filter(card => card._id !== cardToDelete._id))
+        setCards(cards.filter((card) => card._id !== cardToDelete._id));
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
   }
 
   // onClick={() => handleCardClick(card)}
@@ -139,21 +148,23 @@ function App() {
   }
 
   function handleUpdateUser({ name, about }) {
-    api.patchUserInfo(name, about)
-      .then(updatedUser => {
+    api
+      .patchUserInfo(name, about)
+      .then((updatedUser) => {
         setCurrentUser(updatedUser);
         closeAllPopups();
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
   }
 
   function handleUpdateAvatar({ avatar }) {
-    api.patchUserAvatar(avatar)
-      .then(updatedUser => {
+    api
+      .patchUserAvatar(avatar)
+      .then((updatedUser) => {
         setCurrentUser(updatedUser);
         closeAllPopups();
       })
-      .catch(err => console.error(err))
+      .catch((err) => console.error(err));
   }
 
   function closeAllPopups() {
@@ -169,39 +180,39 @@ function App() {
   // I use this to check if user has a valid jwt cookie
   // not to force user to login again upon reload
   useEffect(() => {
-    api.getUserInfo()
-      .then(() => {
-        setIsLoggedIn(true)
-      })
-  }, [])
+    api.getUserInfo().then(() => {
+      setIsLoggedIn(true);
+    });
+  }, []);
 
   useEffect(() => {
     if (isLoggedIn) {
-      api.getInitialCards()
-        .then(initialCards => {
+      api
+        .getInitialCards()
+        .then((initialCards) => {
           setCards(initialCards);
         })
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
     } else {
       setCards([]);
     }
-
-  }, [isLoggedIn])
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (isLoggedIn) {
-      api.getUserInfo()
+      api
+        .getUserInfo()
         .then((userInfo) => {
           setCurrentUser({ ...userInfo });
           setIsLoggedIn(true);
         })
-        .catch(err => console.error(err))
+        .catch((err) => console.error(err));
     } else {
       // удаляю данные о пользователе если пользователь вышел
       // для этого в зависимостях isLoggedIn
       setCurrentUser({});
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn]);
 
   useEffect(() => {
     function closePopUpOnEsc({ key }) {
@@ -214,18 +225,30 @@ function App() {
 
     return () => {
       document.removeEventListener('keydown', closePopUpOnEsc);
-    }
-  }, [])
+    };
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <PopupWithForm name="delete-card" title="Вы уверены?" buttonText={'Да'} />
 
-      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+      <EditProfilePopup
+        isOpen={isEditProfilePopupOpen}
+        onClose={closeAllPopups}
+        onUpdateUser={handleUpdateUser}
+      />
 
-      <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
+      <AddPlacePopup
+        isOpen={isAddPlacePopupOpen}
+        onClose={closeAllPopups}
+        onAddPlace={handleAddPlaceSubmit}
+      />
 
-      <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+      <EditAvatarPopup
+        isOpen={isEditAvatarPopupOpen}
+        onClose={closeAllPopups}
+        onUpdateAvatar={handleUpdateAvatar}
+      />
 
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
@@ -233,7 +256,12 @@ function App() {
         <Header onSignOut={handleSignOut} isLoggedIn={isLoggedIn} />
 
         <Switch>
-          <ProtectedRoute exact path="/" component={Main} checkCallback={() => isLoggedIn} redirectPath='/sign-in'
+          <ProtectedRoute
+            exact
+            path="/"
+            component={Main}
+            checkCallback={() => isLoggedIn}
+            redirectPath="/sign-in"
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
             onEditAvatar={handleEditAvatarClick}
@@ -243,14 +271,22 @@ function App() {
             onCardDelete={handleCardDelete}
           />
 
-          <ProtectedRoute path="/sign-in" component={Login} checkCallback={() => !isLoggedIn} redirectPath='/main'
+          <ProtectedRoute
+            path="/sign-in"
+            component={Login}
+            checkCallback={() => !isLoggedIn}
+            redirectPath="/main"
             onLogin={handleLogin}
             onCloseLoginTooltip={handleCloseLoginTooltip}
             isTooltipOpen={isTooltipOpen}
             tooltipShowsSuccess={tooltipShowsSuccess}
           />
 
-          <ProtectedRoute path="/sign-up" component={Register} checkCallback={() => !isLoggedIn} redirectPath='/main'
+          <ProtectedRoute
+            path="/sign-up"
+            component={Register}
+            checkCallback={() => !isLoggedIn}
+            redirectPath="/main"
             onRegister={handleRegister}
             onCloseRegisterTooltip={handleCloseRegisterTooltip}
             isTooltipOpen={isTooltipOpen}
