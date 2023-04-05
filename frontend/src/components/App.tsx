@@ -3,7 +3,6 @@ import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 
 import Header from './elements/Header';
 import Main from './pages/Main';
-import PopupWithForm from './popups/PopupWithForm';
 import ImagePopup from './popups/ImagePopup';
 import Footer from './elements/Footer';
 import EditProfilePopup from './popups/EditProfilePopup';
@@ -24,11 +23,11 @@ function App() {
 
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
 
-  const [selectedCard, setSelectedCard] = useState(null);
+  const [selectedCard, setSelectedCard] = useState<Card>();
 
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState<User>();
 
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState<Card[]>([]);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -38,7 +37,7 @@ function App() {
 
   const history = useHistory();
 
-  function handleAddPlaceSubmit(name, link) {
+  function handleAddPlaceSubmit(name: string, link: string) {
     api
       .postCard(name, link)
       .then((newCard) => {
@@ -56,7 +55,7 @@ function App() {
     setIsLoggedIn(false);
   }
 
-  function handleRegister(email, password) {
+  function handleRegister(email: string, password: string) {
     return api
       .signUp(email, password)
       .then(({ data }) => {
@@ -79,7 +78,7 @@ function App() {
     }
   }
 
-  function handleLogin(email, password) {
+  function handleLogin(email: string, password: string) {
     return api
       .signIn(email, password)
       .then(() => {
@@ -97,10 +96,16 @@ function App() {
     setIsTooltipOpen(false);
   }
 
-  function handleCardLike(card) {
+  function handleCardLike(card: Card) {
+    if (!currentUser) {
+      throw new Error(
+        'Impossible to like a card without current user selected',
+      );
+    }
+
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
-    function updateCards(updatedCard) {
+    function updateCards(updatedCard: Card) {
       setCards(
         cards.map((card) =>
           card._id === updatedCard._id ? updatedCard : card,
@@ -121,7 +126,7 @@ function App() {
     }
   }
 
-  function handleCardDelete(cardToDelete) {
+  function handleCardDelete(cardToDelete: Card) {
     api
       .deleteCard(cardToDelete._id)
       .then(() => {
@@ -131,7 +136,7 @@ function App() {
   }
 
   // onClick={() => handleCardClick(card)}
-  function handleCardClick(card) {
+  function handleCardClick(card: Card) {
     setSelectedCard(card);
   }
 
@@ -147,7 +152,7 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
-  function handleUpdateUser({ name, about }) {
+  function handleUpdateUser({ name, about }: { name: string; about: string }) {
     api
       .patchUserInfo(name, about)
       .then((updatedUser) => {
@@ -157,7 +162,7 @@ function App() {
       .catch((err) => console.error(err));
   }
 
-  function handleUpdateAvatar({ avatar }) {
+  function handleUpdateAvatar({ avatar }: { avatar: string }) {
     api
       .patchUserAvatar(avatar)
       .then((updatedUser) => {
@@ -174,7 +179,7 @@ function App() {
 
     setIsEditProfilePopupOpen(false);
 
-    setSelectedCard(null);
+    setSelectedCard(undefined);
   }
 
   // I use this to check if user has a valid jwt cookie
@@ -210,12 +215,12 @@ function App() {
     } else {
       // удаляю данные о пользователе если пользователь вышел
       // для этого в зависимостях isLoggedIn
-      setCurrentUser({});
+      setCurrentUser(undefined);
     }
   }, [isLoggedIn]);
 
   useEffect(() => {
-    function closePopUpOnEsc({ key }) {
+    function closePopUpOnEsc({ key }: { key: string }) {
       if (key === 'Escape') {
         closeAllPopups();
       }
@@ -230,8 +235,6 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <PopupWithForm name="delete-card" title="Вы уверены?" buttonText={'Да'} />
-
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
@@ -253,7 +256,7 @@ function App() {
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
       <div className="page">
-        <Header onSignOut={handleSignOut} isLoggedIn={isLoggedIn} />
+        <Header onSignOut={handleSignOut} />
 
         <Switch>
           <ProtectedRoute

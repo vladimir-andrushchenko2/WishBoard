@@ -4,10 +4,22 @@ import Card from '../elements/Card';
 
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onCardLike, onCardDelete }) {
+function Main({
+  onEditProfile,
+  onAddPlace,
+  onEditAvatar,
+  onCardClick,
+  cards,
+  onCardLike,
+  onCardDelete,
+}) {
   const currentUser = useContext(CurrentUserContext);
 
   const avatarRef = useRef();
+
+  if (!currentUser) {
+    return <p>Loading ...</p>;
+  }
 
   return (
     <main className="content">
@@ -19,7 +31,10 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onC
             src={currentUser.avatar}
             alt="заставка профиля"
           />
-          <div className="profile__picture-overlay" onClick={onEditAvatar}></div>
+          <div
+            className="profile__picture-overlay"
+            onClick={onEditAvatar}
+          ></div>
         </div>
         <div className="profile__title">
           <h1 className="profile__title-text">{currentUser.name}</h1>
@@ -43,14 +58,15 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onC
 
       <section className="gallery">
         <ul className="gallery__items">
-          {cards.map(card =>
+          {cards.map((card) => (
             <Card
               card={card}
               key={card._id}
               onCardClick={onCardClick}
               onCardLike={onCardLike}
               onCardDelete={onCardDelete}
-            />)}
+            />
+          ))}
         </ul>
       </section>
     </main>
