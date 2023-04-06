@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, useReducer } from 'react'
 import { Route, Switch, Redirect, useHistory } from 'react-router-dom'
 
 import Header from './elements/Header'
@@ -12,18 +12,20 @@ import ProtectedRoute from './utils/ProtectedRoute'
 import Register from './pages/Register'
 import Login from './pages/Login'
 
+import {
+  initialState as initialPopupState,
+  popupReducer,
+} from '../reducers/popupReducer'
+
 import { api } from '../utils/api'
 
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
 
 function App() {
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
-
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false)
-
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false)
-
-  const [selectedCard, setSelectedCard] = useState<Card>()
+  const [popupState, dispatchPopupAction] = useReducer(
+    popupReducer,
+    initialPopupState
+  )
 
   const [currentUser, setCurrentUser] = useState<User>()
 
@@ -42,13 +44,15 @@ function App() {
       .postCard(name, link)
       .then((newCard) => {
         setCards([newCard, ...cards])
-        closeAllPopups()
+        // closeAllPopups()
+        dispatchPopupAction({
+          type: 'close-all',
+        })
       })
       .catch((err) => console.error(err))
   }
 
   function handleSignOut() {
-    // localStorage.removeItem('jwt');
     api.signOut().then((res) => {
       console.log(res)
     })
@@ -58,7 +62,7 @@ function App() {
   function handleRegister(email: string, password: string) {
     return api
       .signUp(email, password)
-      .then(({ data }) => {
+      .then(() => {
         setTooltipShowsSuccess(true)
         setIsTooltipOpen(true)
       })
@@ -131,21 +135,29 @@ function App() {
       .catch((err) => console.error(err))
   }
 
-  // onClick={() => handleCardClick(card)}
   function handleCardClick(card: Card) {
-    setSelectedCard(card)
+    dispatchPopupAction({
+      type: 'open-show-image',
+      payload: { selectedCard: card },
+    })
   }
 
   function handleEditProfileClick() {
-    setIsEditProfilePopupOpen(true)
+    dispatchPopupAction({
+      type: 'open-edit-profile',
+    })
   }
 
   function handleEditAvatarClick() {
-    setIsEditAvatarPopupOpen(true)
+    dispatchPopupAction({
+      type: 'open-edit-avatar',
+    })
   }
 
   function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(true)
+    dispatchPopupAction({
+      type: 'open-add-place',
+    })
   }
 
   function handleUpdateUser({ name, about }: { name: string; about: string }) {
@@ -153,7 +165,9 @@ function App() {
       .patchUserInfo(name, about)
       .then((updatedUser) => {
         setCurrentUser(updatedUser)
-        closeAllPopups()
+        dispatchPopupAction({
+          type: 'close-all',
+        })
       })
       .catch((err) => console.error(err))
   }
@@ -163,19 +177,12 @@ function App() {
       .patchUserAvatar(avatar)
       .then((updatedUser) => {
         setCurrentUser(updatedUser)
-        closeAllPopups()
+        // closeAllPopups()
+        dispatchPopupAction({
+          type: 'close-all',
+        })
       })
       .catch((err) => console.error(err))
-  }
-
-  function closeAllPopups() {
-    setIsAddPlacePopupOpen(false)
-
-    setIsEditAvatarPopupOpen(false)
-
-    setIsEditProfilePopupOpen(false)
-
-    setSelectedCard(undefined)
   }
 
   // I use this to check if user has a valid jwt cookie
@@ -218,7 +225,10 @@ function App() {
   useEffect(() => {
     function closePopUpOnEsc({ key }: { key: string }) {
       if (key === 'Escape') {
-        closeAllPopups()
+        // closeAllPopups()
+        dispatchPopupAction({
+          type: 'close-all',
+        })
       }
     }
 
@@ -232,24 +242,31 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <EditProfilePopup
-        isOpen={isEditProfilePopupOpen}
-        onClose={closeAllPopups}
+        isOpen={popupState.openedPopup === 'edit-profile'}
+        onClose={() => dispatchPopupAction({ type: 'close-all' })}
         onUpdateUser={handleUpdateUser}
       />
 
       <AddPlacePopup
-        isOpen={isAddPlacePopupOpen}
-        onClose={closeAllPopups}
+        isOpen={popupState.openedPopup === 'add-place'}
+        onClose={() => dispatchPopupAction({ type: 'close-all' })}
         onAddPlace={handleAddPlaceSubmit}
       />
 
       <EditAvatarPopup
-        isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
+        isOpen={popupState.openedPopup === 'edit-avatar'}
+        onClose={() => dispatchPopupAction({ type: 'close-all' })}
         onUpdateAvatar={handleUpdateAvatar}
       />
 
-      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+      <ImagePopup
+        card={
+          popupState.openedPopup === 'show-image'
+            ? popupState.selectedCard
+            : undefined
+        }
+        onClose={() => dispatchPopupAction({ type: 'close-all' })}
+      />
 
       <div className="page">
         <Header onSignOut={handleSignOut} />
