@@ -3,11 +3,7 @@ import { Route, Switch, Redirect, useHistory } from 'react-router-dom'
 
 import Header from './elements/Header'
 import Main from './pages/Main'
-import ImagePopup from './popups/ImagePopup'
 import Footer from './elements/Footer'
-import EditProfilePopup from './popups/EditProfilePopup'
-import EditAvatarPopup from './popups/EditAvatarPopup'
-import AddPlacePopup from './popups/AddPlacePopup'
 import ProtectedRoute from './utils/ProtectedRoute'
 import Register from './pages/Register'
 import Login from './pages/Login'
@@ -20,6 +16,7 @@ import {
 import { api } from '../utils/api'
 
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
+import Popups from './popups/Popups'
 
 function App() {
   const [popupState, dispatchPopupAction] = useReducer(
@@ -34,19 +31,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const history = useHistory()
-
-  function handleAddPlaceSubmit(name: string, link: string) {
-    api
-      .postCard(name, link)
-      .then((newCard) => {
-        setCards([newCard, ...cards])
-        // closeAllPopups()
-        dispatchPopupAction({
-          type: 'close-all',
-        })
-      })
-      .catch((err) => console.error(err))
-  }
 
   function handleSignOut() {
     api
@@ -63,20 +47,12 @@ function App() {
       .signUp(email, password)
       .then(() => {
         dispatchPopupAction({ type: 'open-success-tooltip' })
+        history.push('/sign-in')
       })
       .catch((err) => {
         console.error(err)
         dispatchPopupAction({ type: 'open-error-tooltip' })
       })
-  }
-
-  function handleCloseRegisterTooltip() {
-    if (popupState.openedPopup === 'success-tooltip') {
-      dispatchPopupAction({ type: 'close-all' })
-      history.push('/sign-in')
-    } else {
-      dispatchPopupAction({ type: 'close-all' })
-    }
   }
 
   async function handleLogin(email: string, password: string) {
@@ -125,30 +101,6 @@ function App() {
       .deleteCard(cardToDelete._id)
       .then(() => {
         setCards(cards.filter((card) => card._id !== cardToDelete._id))
-      })
-      .catch((err) => console.error(err))
-  }
-
-  function handleUpdateUser({ name, about }: { name: string; about: string }) {
-    api
-      .patchUserInfo(name, about)
-      .then((updatedUser: User) => {
-        setCurrentUser(updatedUser)
-        dispatchPopupAction({
-          type: 'close-all',
-        })
-      })
-      .catch((err) => console.error(err))
-  }
-
-  function handleUpdateAvatar({ avatar }: { avatar: string }) {
-    api
-      .patchUserAvatar(avatar)
-      .then((updatedUser: User) => {
-        setCurrentUser(updatedUser)
-        dispatchPopupAction({
-          type: 'close-all',
-        })
       })
       .catch((err) => console.error(err))
   }
@@ -212,31 +164,12 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <EditProfilePopup
-        isOpen={popupState.openedPopup === 'edit-profile'}
-        onClose={() => dispatchPopupAction({ type: 'close-all' })}
-        onUpdateUser={handleUpdateUser}
-      />
-
-      <AddPlacePopup
-        isOpen={popupState.openedPopup === 'add-place'}
-        onClose={() => dispatchPopupAction({ type: 'close-all' })}
-        onAddPlace={handleAddPlaceSubmit}
-      />
-
-      <EditAvatarPopup
-        isOpen={popupState.openedPopup === 'edit-avatar'}
-        onClose={() => dispatchPopupAction({ type: 'close-all' })}
-        onUpdateAvatar={handleUpdateAvatar}
-      />
-
-      <ImagePopup
-        card={
-          popupState.openedPopup === 'show-image'
-            ? popupState.selectedCard
-            : undefined
-        }
-        onClose={() => dispatchPopupAction({ type: 'close-all' })}
+      <Popups
+        popupState={popupState}
+        dispatchPopupAction={dispatchPopupAction}
+        cards={cards}
+        setCards={setCards}
+        setCurrentUser={setCurrentUser}
       />
 
       <div className="page">
@@ -275,12 +208,6 @@ function App() {
             checkCallback={() => !isLoggedIn}
             redirectPath="/main"
             onRegister={handleRegister}
-            onCloseRegisterTooltip={handleCloseRegisterTooltip}
-            isTooltipOpen={
-              popupState.openedPopup === 'success-tooltip' ||
-              popupState.openedPopup === 'error-tooltip'
-            }
-            tooltipShowsSuccess={popupState.openedPopup === 'success-tooltip'}
           />
 
           <Route path="/">
