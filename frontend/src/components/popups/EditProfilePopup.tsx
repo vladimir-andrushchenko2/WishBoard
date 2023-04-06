@@ -1,33 +1,43 @@
-import { useState, useContext, useEffect } from 'react';
-import PopupWithForm from './PopupWithForm';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { useState, useContext, useEffect } from 'react'
+import PopupWithForm from './PopupWithForm'
+import { CurrentUserContext } from '../../contexts/CurrentUserContext'
 
-function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
-  const currentUser = useContext(CurrentUserContext);
+type EditProfilePopupProps = {
+  isOpen: boolean
+  onClose: React.MouseEventHandler<HTMLButtonElement>
+  onUpdateUser: ({ name, about }: { name: string; about: string }) => void
+}
 
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+function EditProfilePopup({
+  isOpen,
+  onClose,
+  onUpdateUser,
+}: EditProfilePopupProps) {
+  const currentUser = useContext(CurrentUserContext) as User
+
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
 
   useEffect(() => {
-    setName(currentUser?.name || '');
-    setDescription(currentUser?.about || '');
-  }, [currentUser, isOpen]);
+    setName(currentUser?.name ?? '')
+    setDescription(currentUser?.about || '')
+  }, [currentUser, isOpen])
 
-  function handleNameChange(event) {
-    setName(event.target.value);
+  function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setName(event.target.value)
   }
 
-  function handleDescriptionChange(event) {
-    setDescription(event.target.value);
+  function handleDescriptionChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setDescription(event.target.value)
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
 
     onUpdateUser({
       name,
       about: description,
-    });
+    })
   }
 
   return (
@@ -48,8 +58,8 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
           onChange={handleNameChange}
           className="pop-up__input pop-up__input_type_title"
           placeholder="Ваше имя"
-          minLength="2"
-          maxLength="40"
+          minLength={2}
+          maxLength={30}
           required
         />
         <span className="pop-up__input-error title-input-error"></span>
@@ -63,14 +73,14 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
           onChange={handleDescriptionChange}
           className="pop-up__input pop-up__input_type_subtitle"
           placeholder="О Вас"
-          minLength="2"
-          maxLength="200"
+          minLength={2}
+          maxLength={30}
           required
         />
         <span className="pop-up__input-error subtitle-input-error"></span>
       </label>
     </PopupWithForm>
-  );
+  )
 }
 
-export default EditProfilePopup;
+export default EditProfilePopup

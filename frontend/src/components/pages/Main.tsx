@@ -1,24 +1,30 @@
-import React, { useContext, useRef } from 'react';
+import { useContext, useRef, Dispatch } from 'react'
 
-import Card from '../elements/Card';
+import { PopupReducerAction } from '../../reducers/popupReducer'
 
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import Card from '../elements/Card'
+
+import { CurrentUserContext } from '../../contexts/CurrentUserContext'
+
+type MainProps = {
+  dispatchPopupAction: Dispatch<PopupReducerAction>
+  cards: Card[]
+  onCardLike: (card: Card) => void
+  onCardDelete: (cardToDelete: Card) => void
+}
 
 function Main({
-  onEditProfile,
-  onAddPlace,
-  onEditAvatar,
-  onCardClick,
+  dispatchPopupAction,
   cards,
   onCardLike,
   onCardDelete,
-}) {
-  const currentUser = useContext(CurrentUserContext);
+}: MainProps) {
+  const currentUser = useContext(CurrentUserContext) as User | undefined
 
-  const avatarRef = useRef();
+  const avatarRef = useRef<HTMLImageElement>(null)
 
   if (!currentUser) {
-    return <p>Loading ...</p>;
+    return <p>Loading ...</p>
   }
 
   return (
@@ -31,10 +37,11 @@ function Main({
             src={currentUser.avatar}
             alt="заставка профиля"
           />
-          <div
+          <button
+            aria-label="change profile picture"
             className="profile__picture-overlay"
-            onClick={onEditAvatar}
-          ></div>
+            onClick={() => dispatchPopupAction({ type: 'open-edit-avatar' })}
+          ></button>
         </div>
         <div className="profile__title">
           <h1 className="profile__title-text">{currentUser.name}</h1>
@@ -42,7 +49,7 @@ function Main({
             type="button"
             className="button profile__modify-button"
             aria-label="Изменить профиль"
-            onClick={onEditProfile}
+            onClick={() => dispatchPopupAction({ type: 'open-edit-profile' })}
           ></button>
         </div>
 
@@ -52,7 +59,7 @@ function Main({
           type="button"
           className="button profile__add-button"
           aria-label="Добавить место"
-          onClick={onAddPlace}
+          onClick={() => dispatchPopupAction({ type: 'open-add-place' })}
         ></button>
       </section>
 
@@ -62,7 +69,12 @@ function Main({
             <Card
               card={card}
               key={card._id}
-              onCardClick={onCardClick}
+              onCardClick={() =>
+                dispatchPopupAction({
+                  type: 'open-show-image',
+                  payload: { selectedCard: card },
+                })
+              }
               onCardLike={onCardLike}
               onCardDelete={onCardDelete}
             />
@@ -70,7 +82,7 @@ function Main({
         </ul>
       </section>
     </main>
-  );
+  )
 }
 
-export default Main;
+export default Main

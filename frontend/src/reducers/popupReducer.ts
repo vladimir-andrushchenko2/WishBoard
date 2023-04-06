@@ -1,5 +1,11 @@
 type OpenedPopup = {
-  openedPopup: 'none' | 'edit-profile' | 'edit-avatar' | 'add-place'
+  openedPopup:
+    | 'none'
+    | 'edit-profile'
+    | 'edit-avatar'
+    | 'add-place'
+    | 'success-tooltip'
+    | 'error-tooltip'
 }
 
 type OpenedPopupWithImage = {
@@ -15,6 +21,8 @@ type PopupAction = {
     | 'open-edit-profile'
     | 'open-edit-avatar'
     | 'open-add-place'
+    | 'open-success-tooltip'
+    | 'open-error-tooltip'
 }
 
 type PopupActionWithCard = {
@@ -24,7 +32,7 @@ type PopupActionWithCard = {
   }
 }
 
-type PopupReducerAction = PopupAction | PopupActionWithCard
+export type PopupReducerAction = PopupAction | PopupActionWithCard
 
 export const initialState: OpenedPopup = { openedPopup: 'none' }
 
@@ -44,6 +52,12 @@ export function popupReducer(
 
     case 'open-edit-profile':
       return { openedPopup: 'edit-profile' }
+
+    case 'open-error-tooltip':
+      return { openedPopup: 'error-tooltip' }
+
+    case 'open-success-tooltip':
+      return { openedPopup: 'success-tooltip' }
 
     case 'open-show-image': {
       return {

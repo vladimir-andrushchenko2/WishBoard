@@ -1,6 +1,27 @@
-function PopupWithForm({ title, name, children, isOpen, onClose, buttonText, onSubmit }) {
+import { PropsWithChildren } from 'react'
+
+type PopupWithFormProps = PropsWithChildren<{
+  title: string
+  name: string
+  isOpen: boolean
+  onClose: React.MouseEventHandler<HTMLButtonElement>
+  buttonText: string
+  onSubmit: React.FormEventHandler<HTMLFormElement>
+}>
+
+function PopupWithForm({
+  title,
+  name,
+  children,
+  isOpen,
+  onClose,
+  buttonText,
+  onSubmit,
+}: PopupWithFormProps) {
   return (
-    <div className={`pop-up pop-up_type_${name} ${isOpen ? 'pop-up_opened' : ''}`}>
+    <div
+      className={`pop-up pop-up_type_${name} ${isOpen ? 'pop-up_opened' : ''}`}
+    >
       <div className="pop-up__container">
         <button
           type="button"
@@ -24,7 +45,7 @@ function PopupWithForm({ title, name, children, isOpen, onClose, buttonText, onS
         </form>
       </div>
     </div>
-  );
+  )
 }
 
-export default PopupWithForm;
+export default PopupWithForm

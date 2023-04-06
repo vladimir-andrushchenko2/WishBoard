@@ -33,10 +33,6 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-  const [isTooltipOpen, setIsTooltipOpen] = useState(false)
-
-  const [tooltipShowsSuccess, setTooltipShowsSuccess] = useState(false)
-
   const history = useHistory()
 
   function handleAddPlaceSubmit(name: string, link: string) {
@@ -53,9 +49,12 @@ function App() {
   }
 
   function handleSignOut() {
-    api.signOut().then((res) => {
-      console.log(res)
-    })
+    api
+      .signOut()
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => console.error(err))
     setIsLoggedIn(false)
   }
 
@@ -63,41 +62,36 @@ function App() {
     return api
       .signUp(email, password)
       .then(() => {
-        setTooltipShowsSuccess(true)
-        setIsTooltipOpen(true)
+        dispatchPopupAction({ type: 'open-success-tooltip' })
       })
       .catch((err) => {
-        console.error(`Error status code ${err}`)
-        setTooltipShowsSuccess(false)
-        setIsTooltipOpen(true)
+        console.error(err)
+        dispatchPopupAction({ type: 'open-error-tooltip' })
       })
   }
 
   function handleCloseRegisterTooltip() {
-    if (tooltipShowsSuccess) {
-      setIsTooltipOpen(false)
+    if (popupState.openedPopup === 'success-tooltip') {
+      dispatchPopupAction({ type: 'close-all' })
       history.push('/sign-in')
     } else {
-      setIsTooltipOpen(false)
+      dispatchPopupAction({ type: 'close-all' })
     }
   }
 
-  function handleLogin(email: string, password: string) {
-    return api
-      .signIn(email, password)
-      .then(() => {
-        setIsLoggedIn(true)
+  async function handleLogin(email: string, password: string) {
+    try {
+      await api.signIn(email, password)
+      setIsLoggedIn(true)
 
-        history.push('/')
-      })
-      .catch((status) => {
-        setTooltipShowsSuccess(false)
-        setIsTooltipOpen(true)
-      })
+      history.push('/')
+    } catch {
+      dispatchPopupAction({ type: 'open-error-tooltip' })
+    }
   }
 
   function handleCloseLoginTooltip() {
-    setIsTooltipOpen(false)
+    dispatchPopupAction({ type: 'close-all' })
   }
 
   function handleCardLike(card: Card) {
@@ -135,35 +129,10 @@ function App() {
       .catch((err) => console.error(err))
   }
 
-  function handleCardClick(card: Card) {
-    dispatchPopupAction({
-      type: 'open-show-image',
-      payload: { selectedCard: card },
-    })
-  }
-
-  function handleEditProfileClick() {
-    dispatchPopupAction({
-      type: 'open-edit-profile',
-    })
-  }
-
-  function handleEditAvatarClick() {
-    dispatchPopupAction({
-      type: 'open-edit-avatar',
-    })
-  }
-
-  function handleAddPlaceClick() {
-    dispatchPopupAction({
-      type: 'open-add-place',
-    })
-  }
-
   function handleUpdateUser({ name, about }: { name: string; about: string }) {
     api
       .patchUserInfo(name, about)
-      .then((updatedUser) => {
+      .then((updatedUser: User) => {
         setCurrentUser(updatedUser)
         dispatchPopupAction({
           type: 'close-all',
@@ -175,9 +144,8 @@ function App() {
   function handleUpdateAvatar({ avatar }: { avatar: string }) {
     api
       .patchUserAvatar(avatar)
-      .then((updatedUser) => {
+      .then((updatedUser: User) => {
         setCurrentUser(updatedUser)
-        // closeAllPopups()
         dispatchPopupAction({
           type: 'close-all',
         })
@@ -188,16 +156,19 @@ function App() {
   // I use this to check if user has a valid jwt cookie
   // not to force user to login again upon reload
   useEffect(() => {
-    api.getUserInfo().then(() => {
-      setIsLoggedIn(true)
-    })
+    api
+      .getUserInfo()
+      .then(() => {
+        setIsLoggedIn(true)
+      })
+      .catch((err) => console.error(err))
   }, [])
 
   useEffect(() => {
     if (isLoggedIn) {
       api
         .getInitialCards()
-        .then((initialCards) => {
+        .then((initialCards: Card[]) => {
           setCards(initialCards)
         })
         .catch((err) => console.error(err))
@@ -210,8 +181,8 @@ function App() {
     if (isLoggedIn) {
       api
         .getUserInfo()
-        .then((userInfo) => {
-          setCurrentUser({ ...userInfo })
+        .then((user: User) => {
+          setCurrentUser(user)
           setIsLoggedIn(true)
         })
         .catch((err) => console.error(err))
@@ -278,10 +249,7 @@ function App() {
             component={Main}
             checkCallback={() => isLoggedIn}
             redirectPath="/sign-in"
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
+            dispatchPopupAction={dispatchPopupAction}
             cards={cards}
             onCardLike={handleCardLike}
             onCardDelete={handleCardDelete}
@@ -294,8 +262,11 @@ function App() {
             redirectPath="/main"
             onLogin={handleLogin}
             onCloseLoginTooltip={handleCloseLoginTooltip}
-            isTooltipOpen={isTooltipOpen}
-            tooltipShowsSuccess={tooltipShowsSuccess}
+            isTooltipOpen={
+              popupState.openedPopup === 'success-tooltip' ||
+              popupState.openedPopup === 'error-tooltip'
+            }
+            tooltipShowsSuccess={popupState.openedPopup === 'success-tooltip'}
           />
 
           <ProtectedRoute
@@ -305,8 +276,11 @@ function App() {
             redirectPath="/main"
             onRegister={handleRegister}
             onCloseRegisterTooltip={handleCloseRegisterTooltip}
-            isTooltipOpen={isTooltipOpen}
-            tooltipShowsSuccess={tooltipShowsSuccess}
+            isTooltipOpen={
+              popupState.openedPopup === 'success-tooltip' ||
+              popupState.openedPopup === 'error-tooltip'
+            }
+            tooltipShowsSuccess={popupState.openedPopup === 'success-tooltip'}
           />
 
           <Route path="/">
