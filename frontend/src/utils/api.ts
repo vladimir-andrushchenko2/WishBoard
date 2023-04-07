@@ -86,8 +86,12 @@ class Api {
   }
 }
 
+const baseUrl = import.meta.env.PROD
+  ? (import.meta.env.VITE_API_URL as string)
+  : 'http://localhost:8080'
+
 export const api = new Api({
-  baseUrl: 'http://localhost:8080',
+  baseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
