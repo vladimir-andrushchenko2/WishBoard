@@ -1,27 +1,21 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import PopupWithForm from './PopupWithForm'
-import { CurrentUserContext } from '../../contexts/CurrentUserContext'
 
 type EditProfilePopupProps = {
   isOpen: boolean
   onClose: React.MouseEventHandler<HTMLButtonElement>
   onUpdateUser: ({ name, about }: { name: string; about: string }) => void
+  currentUser: User
 }
 
 function EditProfilePopup({
   isOpen,
   onClose,
   onUpdateUser,
+  currentUser,
 }: EditProfilePopupProps) {
-  const currentUser = useContext(CurrentUserContext) as User
-
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-
-  useEffect(() => {
-    setName(currentUser?.name ?? '')
-    setDescription(currentUser?.about || '')
-  }, [currentUser, isOpen])
+  const [name, setName] = useState(currentUser.name)
+  const [description, setDescription] = useState(currentUser.about)
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setName(event.target.value)

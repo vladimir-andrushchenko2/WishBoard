@@ -1,5 +1,5 @@
-import successSign from '../../assets/ui-elements/success.svg'
-import failureSign from '../../assets/ui-elements/fail.svg'
+import successSign from '../assets/ui-elements/success.svg'
+import failureSign from '../assets/ui-elements/fail.svg'
 
 type InfoTooltipProps = {
   isOpen: boolean
