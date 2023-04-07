@@ -1,16 +1,15 @@
-import { useContext, useRef, Dispatch } from 'react'
+import { useRef, Dispatch } from 'react'
 
 import { PopupReducerAction } from '../reducers/popupReducer'
 
 import Card from '../components/elements/Card'
-
-import { CurrentUserContext } from '../contexts/CurrentUserContext'
 
 type MainProps = {
   dispatchPopupAction: Dispatch<PopupReducerAction>
   cards: Card[]
   onCardLike: (card: Card) => void
   onCardDelete: (cardToDelete: Card) => void
+  currentUser: User
 }
 
 function Main({
@@ -18,14 +17,9 @@ function Main({
   cards,
   onCardLike,
   onCardDelete,
+  currentUser,
 }: MainProps) {
-  const currentUser = useContext(CurrentUserContext) as User | undefined
-
   const avatarRef = useRef<HTMLImageElement>(null)
-
-  if (!currentUser) {
-    return <p>Loading ...</p>
-  }
 
   return (
     <main className="content">
@@ -77,6 +71,7 @@ function Main({
               }
               onCardLike={onCardLike}
               onCardDelete={onCardDelete}
+              currentUser={currentUser}
             />
           ))}
         </ul>

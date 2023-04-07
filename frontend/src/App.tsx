@@ -1,4 +1,4 @@
-import { useEffect, useState, useReducer } from 'react'
+import { useState, useReducer } from 'react'
 
 import Header from './components/elements/Header'
 import Footer from './components/elements/Footer'
@@ -9,6 +9,22 @@ import EditAvatarPopup from './popups/EditAvatarPopup'
 import AddPlacePopup from './popups/AddPlacePopup'
 
 import Main from './pages/Main'
+
+import { redirect, useNavigate, useLoaderData } from 'react-router-dom'
+
+export async function loader() {
+  try {
+    const [currentUser, cards] = await Promise.all([
+      api.getUserInfo(),
+      api.getCards(),
+    ])
+
+    return { currentUser, cards }
+  } catch (err) {
+    console.log(err)
+    return redirect('/login')
+  }
+}
 
 import {
   initialState as initialPopupState,
@@ -23,18 +39,22 @@ function App() {
     initialPopupState
   )
 
-  const [currentUser, setCurrentUser] = useState<User>()
+  const { currentUser: loadedUser, cards: loadedCards } = useLoaderData() as {
+    currentUser: User
+    cards: Card[]
+  }
 
-  const [cards, setCards] = useState<Card[]>([])
+  const [cards, setCards] = useState<Card[]>(loadedCards)
+  const [currentUser, setCurrentUser] = useState(() => loadedUser)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const navigate = useNavigate()
 
   function handleAddPlaceSubmit(name: string, link: string) {
     api
       .postCard(name, link)
       .then((newCard) => {
         setCards([newCard, ...cards])
-        // closeAllPopups()
         dispatchPopupAction({
           type: 'close-all',
         })
@@ -47,9 +67,9 @@ function App() {
       .signOut()
       .then((res) => {
         console.log(res)
+        navigate('/login')
       })
       .catch((err) => console.error(err))
-    setIsLoggedIn(false)
   }
 
   function handleCardLike(card: Card) {
@@ -111,69 +131,13 @@ function App() {
       .catch((err) => console.error(err))
   }
 
-  // I use this to check if user has a valid jwt cookie
-  // not to force user to login again upon reload
-  useEffect(() => {
-    api
-      .getUserInfo()
-      .then(() => {
-        setIsLoggedIn(true)
-      })
-      .catch((err) => console.error(err))
-  }, [])
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      api
-        .getInitialCards()
-        .then((initialCards: Card[]) => {
-          setCards(initialCards)
-        })
-        .catch((err) => console.error(err))
-    } else {
-      setCards([])
-    }
-  }, [isLoggedIn])
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      api
-        .getUserInfo()
-        .then((user: User) => {
-          setCurrentUser(user)
-          setIsLoggedIn(true)
-        })
-        .catch((err) => console.error(err))
-    } else {
-      // удаляю данные о пользователе если пользователь вышел
-      // для этого в зависимостях isLoggedIn
-      setCurrentUser(undefined)
-    }
-  }, [isLoggedIn])
-
-  useEffect(() => {
-    function closePopUpOnEsc({ key }: { key: string }) {
-      if (key === 'Escape') {
-        // closeAllPopups()
-        dispatchPopupAction({
-          type: 'close-all',
-        })
-      }
-    }
-
-    document.addEventListener('keydown', closePopUpOnEsc)
-
-    return () => {
-      document.removeEventListener('keydown', closePopUpOnEsc)
-    }
-  }, [])
-
   return (
     <>
       <EditProfilePopup
         isOpen={popupState.openedPopup === 'edit-profile'}
         onClose={() => dispatchPopupAction({ type: 'close-all' })}
         onUpdateUser={handleUpdateUser}
+        currentUser={currentUser}
       />
 
       <AddPlacePopup
@@ -198,12 +162,29 @@ function App() {
       />
 
       <div className="page">
-        <Header onSignOut={handleSignOut} />
+        <Header
+          isBurgerVisible={true}
+          isMenuOpen={isMenuOpen}
+          onMenuClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <div
+            className={`header__menu ${
+              isMenuOpen ? '' : 'header__menu_hidden'
+            }`}
+          >
+            <span className="header__user-email">{currentUser.email}</span>
+            <button className="header__sign-out" onClick={handleSignOut}>
+              Выйти
+            </button>
+          </div>
+        </Header>
+
         <Main
           dispatchPopupAction={dispatchPopupAction}
           cards={cards}
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
+          currentUser={currentUser}
         />
 
         <Footer />

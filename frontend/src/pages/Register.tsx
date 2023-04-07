@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom'
 import Auth from '../components/elements/Auth'
 import InfoTooltip from '../popups/InfoTooltip'
 import { useReducer } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import Header from '../components/elements/Header'
 
 import {
   initialState as initialPopupState,
@@ -17,12 +18,13 @@ function Register() {
     initialPopupState
   )
 
+  const navigate = useNavigate()
+
   function handleCloseRegisterTooltip() {
+    dispatchPopupAction({ type: 'close-all' })
+
     if (popupState.openedPopup === 'success-tooltip') {
-      dispatchPopupAction({ type: 'close-all' })
-      history.push('/sign-in')
-    } else {
-      dispatchPopupAction({ type: 'close-all' })
+      navigate('/login')
     }
   }
 
@@ -38,10 +40,13 @@ function Register() {
       })
   }
 
-  const history = useHistory()
-
   return (
-    <>
+    <div className="page">
+      <Header isBurgerVisible={false} isMenuOpen={false}>
+        <Link className="header__action" to="/login">
+          Войти
+        </Link>
+      </Header>
       <InfoTooltip
         onClose={handleCloseRegisterTooltip}
         isOpen={
@@ -55,10 +60,10 @@ function Register() {
         buttonText="Зарегистрироваться"
         onSubmitAuth={handleRegister}
       />
-      <Link className="auth__link" to="/sing-in">
+      <Link className="auth__link" to="/login">
         Уже зарегистрированы? Войти
       </Link>
-    </>
+    </div>
   )
 }
 

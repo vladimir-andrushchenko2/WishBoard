@@ -1,8 +1,9 @@
 import { useReducer } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 import Auth from '../components/elements/Auth'
 import InfoTooltip from '../popups/InfoTooltip'
+import Header from '../components/elements/Header'
 
 import {
   initialState as initialPopupState,
@@ -17,19 +18,24 @@ function Login() {
     initialPopupState
   )
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   async function handleLogin(email: string, password: string) {
     try {
       await api.signIn(email, password)
-      history.push('/')
+      navigate('/')
     } catch {
       dispatchPopupAction({ type: 'open-error-tooltip' })
     }
   }
 
   return (
-    <>
+    <div className="page">
+      <Header isBurgerVisible={false} isMenuOpen={false}>
+        <Link className="header__action" to="/register">
+          Регистрация
+        </Link>
+      </Header>
       <InfoTooltip
         onClose={() => dispatchPopupAction({ type: 'close-all' })}
         isOpen={
@@ -39,7 +45,7 @@ function Login() {
         isSuccess={popupState.openedPopup === 'success-tooltip'}
       ></InfoTooltip>
       <Auth headerText="Вход" buttonText="Войти" onSubmitAuth={handleLogin} />
-    </>
+    </div>
   )
 }
 

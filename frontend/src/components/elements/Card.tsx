@@ -1,21 +1,22 @@
-import { useContext } from 'react'
-
-import { CurrentUserContext } from '../../contexts/CurrentUserContext'
-
 type CardProps = {
   card: Card
   onCardClick: () => void
   onCardDelete: (cardToDelete: Card) => void
   onCardLike: (card: Card) => void
+  currentUser: User
 }
 
-function Card({ card, onCardClick, onCardLike, onCardDelete }: CardProps) {
-  const currentUser = useContext(CurrentUserContext) as User | undefined
-
+function Card({
+  card,
+  onCardClick,
+  onCardLike,
+  onCardDelete,
+  currentUser,
+}: CardProps) {
   const { link, name } = card
 
-  const isOwn = card.owner._id === currentUser?._id
-  const isLiked = card.likes.some((i) => i._id === currentUser?._id)
+  const isOwn = card.owner._id === currentUser._id
+  const isLiked = card.likes.some((i) => i._id === currentUser._id)
 
   function handleCardLike() {
     onCardLike(card)

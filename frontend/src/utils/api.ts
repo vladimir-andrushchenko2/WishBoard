@@ -27,7 +27,7 @@ class Api {
     })
   }
 
-  getInitialCards() {
+  getCards() {
     return this._makeRequest('/cards').then(
       ({ data }: { data: Card[] }) => data
     )
