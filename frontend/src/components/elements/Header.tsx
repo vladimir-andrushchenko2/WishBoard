@@ -1,5 +1,4 @@
 import { PropsWithChildren } from 'react'
-import { Link } from 'react-router-dom'
 
 type HeaderProps = PropsWithChildren<{
   isBurgerVisible: boolean
@@ -16,7 +15,7 @@ function Header({
   return (
     <header className={`header ${!isBurgerVisible ? 'header_auth' : ''}`}>
       <div className="header__container">
-        <div className="logo"></div>
+        <div className="logo">WishBoard</div>
         {isBurgerVisible && (
           <button
             onClick={onMenuClick}

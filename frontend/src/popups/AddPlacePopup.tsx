@@ -35,7 +35,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }: AddPlacePopupProps) {
       title="New Card"
       isOpen={isOpen}
       onClose={onClose}
-      buttonText={'Создать'}
+      buttonText={'Create new card'}
     >
       <label className="pop-up__form-field">
         <input

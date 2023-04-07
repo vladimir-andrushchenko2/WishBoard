@@ -26,10 +26,10 @@ function EditAvatarPopup({
     <PopupWithForm
       onSubmit={handleSubmit}
       name="edit-profile-picture"
-      title="Обновить аватар"
+      title="Update profile picture"
       isOpen={isOpen}
       onClose={onClose}
-      buttonText={'Сохранить'}
+      buttonText={'Save'}
     >
       <label className="pop-up__form-field">
         <input

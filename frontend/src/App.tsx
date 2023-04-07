@@ -174,7 +174,7 @@ function App() {
           >
             <span className="header__user-email">{currentUser.email}</span>
             <button className="header__sign-out" onClick={handleSignOut}>
-              Log Out
+              LogOut
             </button>
           </div>
         </Header>
