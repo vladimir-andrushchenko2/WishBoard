@@ -33,7 +33,7 @@ function Login() {
     <div className="page">
       <Header isBurgerVisible={false} isMenuOpen={false}>
         <Link className="header__action" to="/register">
-          Регистрация
+          Register
         </Link>
       </Header>
       <InfoTooltip
