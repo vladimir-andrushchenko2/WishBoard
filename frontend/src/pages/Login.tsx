@@ -44,7 +44,7 @@ function Login() {
         }
         isSuccess={popupState.openedPopup === 'success-tooltip'}
       ></InfoTooltip>
-      <Auth headerText="Вход" buttonText="Войти" onSubmitAuth={handleLogin} />
+      <Auth headerText="Login" buttonText="Login" onSubmitAuth={handleLogin} />
     </div>
   )
 }

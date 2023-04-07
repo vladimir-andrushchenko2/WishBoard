@@ -39,7 +39,7 @@ function EditAvatarPopup({
           onChange={(e) => setUrl(e.target.value)}
           value={url}
           className="pop-up__input pop-up__input_type_picture-source"
-          placeholder="Ссылка на картинку"
+          placeholder="Url of the picture"
           required
         />
         <span className="pop-up__input-error update-profile-picture-input-error"></span>

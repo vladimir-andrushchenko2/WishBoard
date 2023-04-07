@@ -35,7 +35,7 @@ function deleteCard(req, res, next) {
       }
 
       if (card.owner.id !== req.user._id) {
-        throw new ForbiddenError('Нельзя удалять чужие карточки');
+        throw new ForbiddenError('You can\'t delete other people\'s cards');
       }
 
       await Card.deleteOne({ _id: card._id });

@@ -29,7 +29,7 @@ function Main({
             ref={avatarRef}
             className="profile__picture"
             src={currentUser.avatar}
-            alt="заставка профиля"
+            alt="Profile"
           />
           <button
             aria-label="change profile picture"
@@ -42,7 +42,7 @@ function Main({
           <button
             type="button"
             className="button profile__modify-button"
-            aria-label="Изменить профиль"
+            aria-label="Change profile"
             onClick={() => dispatchPopupAction({ type: 'open-edit-profile' })}
           ></button>
         </div>
@@ -52,7 +52,7 @@ function Main({
         <button
           type="button"
           className="button profile__add-button"
-          aria-label="Добавить место"
+          aria-label="Add wish"
           onClick={() => dispatchPopupAction({ type: 'open-add-place' })}
         ></button>
       </section>

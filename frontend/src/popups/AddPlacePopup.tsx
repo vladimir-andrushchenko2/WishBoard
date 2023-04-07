@@ -32,7 +32,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }: AddPlacePopupProps) {
     <PopupWithForm
       onSubmit={handleSubmit}
       name="gallery-add"
-      title="Новое место"
+      title="New Card"
       isOpen={isOpen}
       onClose={onClose}
       buttonText={'Создать'}
@@ -45,7 +45,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }: AddPlacePopupProps) {
           value={name}
           onChange={handleNameChange}
           className="pop-up__input pop-up__input_type_name"
-          placeholder="Название"
+          placeholder="Title"
           minLength={2}
           maxLength={30}
           required
@@ -60,7 +60,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }: AddPlacePopupProps) {
           value={link}
           onChange={handleLinkChange}
           className="pop-up__input pop-up__input_type_picture-source"
-          placeholder="Ссылка на картинку"
+          placeholder="Url of the picture"
           required
         />
         <span className="pop-up__input-error picture-source-input-error"></span>

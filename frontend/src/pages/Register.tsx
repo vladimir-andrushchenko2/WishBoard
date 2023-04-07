@@ -44,7 +44,7 @@ function Register() {
     <div className="page">
       <Header isBurgerVisible={false} isMenuOpen={false}>
         <Link className="header__action" to="/login">
-          Войти
+          Login
         </Link>
       </Header>
       <InfoTooltip
@@ -56,12 +56,12 @@ function Register() {
         isSuccess={popupState.openedPopup === 'success-tooltip'}
       ></InfoTooltip>
       <Auth
-        headerText="Регистрация"
-        buttonText="Зарегистрироваться"
+        headerText="Register"
+        buttonText="Reginster"
         onSubmitAuth={handleRegister}
       />
       <Link className="auth__link" to="/login">
-        Уже зарегистрированы? Войти
+        Already registered? Login
       </Link>
     </div>
   )

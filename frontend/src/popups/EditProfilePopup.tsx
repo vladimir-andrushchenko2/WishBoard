@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import PopupWithForm from './PopupWithForm'
 
 type EditProfilePopupProps = {
@@ -37,10 +37,10 @@ function EditProfilePopup({
   return (
     <PopupWithForm
       name="profile"
-      title="Редактировать профиль"
+      title="Edit Profile"
       isOpen={isOpen}
       onClose={onClose}
-      buttonText={'Сохранить'}
+      buttonText={'Save'}
       onSubmit={handleSubmit}
     >
       <label className="pop-up__form-field">
@@ -51,7 +51,7 @@ function EditProfilePopup({
           value={name}
           onChange={handleNameChange}
           className="pop-up__input pop-up__input_type_title"
-          placeholder="Ваше имя"
+          placeholder="Your Name"
           minLength={2}
           maxLength={30}
           required
@@ -66,7 +66,7 @@ function EditProfilePopup({
           value={description}
           onChange={handleDescriptionChange}
           className="pop-up__input pop-up__input_type_subtitle"
-          placeholder="О Вас"
+          placeholder="Tell about yourself"
           minLength={2}
           maxLength={30}
           required
