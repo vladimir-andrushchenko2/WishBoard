@@ -13,7 +13,7 @@ type OpenedPopupWithImage = {
   selectedCard: Card
 }
 
-export type PopupState = OpenedPopup | OpenedPopupWithImage
+type PopupState = OpenedPopup | OpenedPopupWithImage
 
 type PopupAction = {
   type:
