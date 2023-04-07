@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import PopupWithForm from './PopupWithForm'
-import { CurrentUserContext } from '../../contexts/CurrentUserContext'
+import { CurrentUserContext } from '../contexts/CurrentUserContext'
 
 type EditProfilePopupProps = {
   isOpen: boolean

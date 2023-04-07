@@ -1,10 +1,10 @@
 import { useContext, useRef, Dispatch } from 'react'
 
-import { PopupReducerAction } from '../../reducers/popupReducer'
+import { PopupReducerAction } from '../reducers/popupReducer'
 
-import Card from '../elements/Card'
+import Card from '../components/elements/Card'
 
-import { CurrentUserContext } from '../../contexts/CurrentUserContext'
+import { CurrentUserContext } from '../contexts/CurrentUserContext'
 
 type MainProps = {
   dispatchPopupAction: Dispatch<PopupReducerAction>
