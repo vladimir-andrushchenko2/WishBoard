@@ -83,7 +83,6 @@ function login(req, res, next) {
       );
 
       return res.cookie('jwt', token, {
-        // token - наш JWT токен, который мы отправляем
         maxAge: 3600000,
         httpOnly: true,
       }).status(200).send({ message: 'login successfull, token is stored in cookies' });

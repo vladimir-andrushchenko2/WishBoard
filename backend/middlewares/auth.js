@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
     return next(new UnauthorizedError('Problem with the jwt token'));
   }
 
-  req.user = payload; // записываем пейлоуд в объект запроса
+  req.user = payload;
 
-  return next(); // пропускаем запрос дальше
+  return next();
 };

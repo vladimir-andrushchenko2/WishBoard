@@ -21,7 +21,7 @@ function Header({
             onClick={onMenuClick}
             className={`burger ${isMenuOpen ? 'burger_active' : ''}`}
             type="button"
-            aria-label="меню"
+            aria-label="Menu"
           >
             <span className="burger__line"></span>
             <span className="burger__line"></span>

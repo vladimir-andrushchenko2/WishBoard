@@ -12,8 +12,8 @@ function InfoTooltip({ isOpen, onClose, isSuccess }: InfoTooltipProps) {
     backgroundImage: `url(${isSuccess ? successSign : failureSign})`,
   }
   const message = isSuccess
-    ? 'Вы успешно зарегистрировались!'
-    : 'Что-то пошло не так! Попробуйте ещё раз.'
+    ? 'You successfully registered, you will be redirected to the login page'
+    : 'Somethis went wrong. Maybe user with such email is already registered'
 
   return (
     <div className={`pop-up ${isOpen ? 'pop-up_opened' : ''}`}>

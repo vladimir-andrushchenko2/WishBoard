@@ -75,7 +75,7 @@ function Auth({ headerText, buttonText, onSubmitAuth }: AuthProps) {
             type="password"
             name="password"
             value={password}
-            placeholder="Пароль"
+            placeholder="Password"
             onChange={handlePasswordChange}
             autoComplete="current-password"
           />
