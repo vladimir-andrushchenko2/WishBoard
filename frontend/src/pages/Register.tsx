@@ -57,7 +57,7 @@ function Register() {
       ></InfoTooltip>
       <Auth
         headerText="Register"
-        buttonText="Reginster"
+        buttonText="Register"
         onSubmitAuth={handleRegister}
       />
       <Link className="auth__link" to="/login">
