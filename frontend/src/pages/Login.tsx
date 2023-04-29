@@ -37,6 +37,8 @@ function Login() {
         </Link>
       </Header>
       <InfoTooltip
+        onFailMsg="Wrong combination of email and password"
+        onSuccessMsg="Success"
         onClose={() => dispatchPopupAction({ type: 'close-all' })}
         isOpen={
           popupState.openedPopup === 'error-tooltip' ||

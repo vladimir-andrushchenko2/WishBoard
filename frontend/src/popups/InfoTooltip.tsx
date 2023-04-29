@@ -5,15 +5,22 @@ type InfoTooltipProps = {
   isOpen: boolean
   onClose: React.MouseEventHandler<HTMLButtonElement>
   isSuccess: boolean
+  onSuccessMsg: string
+  onFailMsg: string
 }
 
-function InfoTooltip({ isOpen, onClose, isSuccess }: InfoTooltipProps) {
+function InfoTooltip({
+  isOpen,
+  onClose,
+  isSuccess,
+  onSuccessMsg,
+  onFailMsg,
+}: InfoTooltipProps) {
   const backgroundImage = {
     backgroundImage: `url(${isSuccess ? successSign : failureSign})`,
   }
-  const message = isSuccess
-    ? 'You successfully registered, you will be redirected to the login page'
-    : 'Somethis went wrong. Maybe user with such email is already registered'
+
+  const message = isSuccess ? onSuccessMsg : onFailMsg
 
   return (
     <div className={`pop-up ${isOpen ? 'pop-up_opened' : ''}`}>

@@ -48,6 +48,8 @@ function Register() {
         </Link>
       </Header>
       <InfoTooltip
+        onFailMsg="Somethis went wrong. Maybe user with such email is already registered"
+        onSuccessMsg="You successfully registered, you will be redirected to the login page"
         onClose={handleCloseRegisterTooltip}
         isOpen={
           popupState.openedPopup === 'error-tooltip' ||
